@@ -22,4 +22,4 @@ RUN echo "0 7 * * * python /app/script_multi_topic.py >> /var/logs/cron.log 2>&1
 RUN chmod 0644 /etc/cron.d/chargement_repos_daily
 
 # Démarrer cron + suivre les logs
-CMD cron && tail -f /var/log/cron.log
+CMD cron && tail -f /var/logs/cron.log
