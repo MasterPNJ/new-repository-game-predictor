@@ -6,7 +6,7 @@ services:
     container_name: script_chargement_donnnees
     restart: no
     volumes:
-      - /home/projet_bigdata/env:/app/:ro  
+      - /home/projet_bigdata/env:/app/env:ro  
       - /home/projet_bigdata/logs:/var/logs
     environment:
       - ENV_PATH=/app/env/.env  

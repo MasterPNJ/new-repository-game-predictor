@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from datetime import date, timedelta
 import calendar
 
-load_dotenv()
+load_dotenv("/app/env/.env")
 
 # Config GitHub
 GITHUB_API_BASE = "https://api.github.com"
