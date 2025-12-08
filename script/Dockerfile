@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONUNBUFFERED=1
 
 # Tâche cron : exécuter le script tous les jours à 10:05
-RUN echo "5 10 * * * root /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily
+RUN echo "15 10 * * * root /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily
 RUN chmod 0644 /etc/cron.d/chargement_repos_daily
 
 # Eviter d'utiliser 'crontab' sur le fichier dans /etc/cron.d (cron lit ce dossier automatiquement)
