@@ -1,0 +1,74 @@
+from apscheduler.schedulers.blocking import BlockingScheduler
+import logging
+import subprocess
+import sys
+
+# Configuration des logs
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+def run_extraction():
+    """Exécute le script d'extraction"""
+    logger.info("=" * 60)
+    logger.info("🚀 DÉMARRAGE DE L'EXTRACTION PLANIFIÉE")
+    logger.info("=" * 60)
+    
+    try:
+        # Exécuter le script
+        result = subprocess.run(
+            [sys.executable, '/app/script_multi_topic.py'],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        
+        # Afficher la sortie complète
+        if result.stdout:
+            print(result.stdout)
+        
+        logger.info("=" * 60)
+        logger.info("✅ EXTRACTION TERMINÉE AVEC SUCCÈS")
+        logger.info("=" * 60)
+        
+    except subprocess.CalledProcessError as e:
+        logger.error("=" * 60)
+        logger.error("❌ ERREUR LORS DE L'EXTRACTION")
+        logger.error("=" * 60)
+        if e.stdout:
+            logger.error(f"Sortie standard:\n{e.stdout}")
+        if e.stderr:
+            logger.error(f"Erreur standard:\n{e.stderr}")
+        logger.error("=" * 60)
+        
+    except Exception as e:
+        logger.error(f"❌ Erreur inattendue: {e}")
+
+if __name__ == '__main__':
+    scheduler = BlockingScheduler()
+    
+    # Planifier l'exécution quotidienne à 10h15
+    scheduler.add_job(
+        run_extraction,
+        'cron',
+        hour=10,
+        minute=15,
+        id='extraction_github_daily'
+    )
+    
+    logger.info("=" * 60)
+    logger.info("🕐 SCHEDULER DÉMARRÉ")
+    logger.info("📅 Exécution planifiée : Tous les jours à 10h15")
+    logger.info(f"⏰ Prochaine exécution : {scheduler.get_jobs()[0].next_run_time}")
+    logger.info("=" * 60)
+    
+    # OPTIONNEL : Décommenter pour exécuter immédiatement au démarrage
+    # logger.info("▶️  Exécution immédiate au démarrage...")
+    # run_extraction()
+    
+    try:
+        scheduler.start()
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("🛑 Arrêt du scheduler")
