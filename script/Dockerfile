@@ -15,14 +15,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Charger les variables d'environnement depuis /app/.env
 ENV PYTHONUNBUFFERED=1
 
-# Tâche cron : exécuter main.py tous les jours à 7h (0 7 * * *)
-RUN echo "5 10 * * * python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily
-
-# Permissions nécessaires
+# Tâche cron : exécuter le script tous les jours à 10:05
+RUN echo "5 10 * * * root /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily
 RUN chmod 0644 /etc/cron.d/chargement_repos_daily
 
-# Appliquer la tâche cron
-RUN crontab /etc/cron.d/chargement_repos_daily
+# Eviter d'utiliser 'crontab' sur le fichier dans /etc/cron.d (cron lit ce dossier automatiquement)
 
-# Démarrer cron + suivre les logs
-CMD cron && tail -f /var/logs/cron.log
+# Démarrer cron en avant-plan pour que le conteneur reste actif
+CMD ["cron", "-f"]
