@@ -17,11 +17,9 @@ ENV PYTHONUNBUFFERED=1
 
 # Créer le fichier cron avec la syntaxe correcte
 # IMPORTANT: pas de "root" dans les fichiers /etc/cron.d, et il faut un saut de ligne final
-# echo "* * * * * echo 'POURQUOI AVEC PYTHON ÇA MARCHE PAS !!!' >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily && \
-# RUN echo "58 10 * * * /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily && \
 RUN echo "SHELL=/bin/bash" > /etc/cron.d/chargement_repos_daily && \
     echo "PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin" >> /etc/cron.d/chargement_repos_daily && \
-    echo "* * * * * cd /app && /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" >> /etc/cron.d/chargement_repos_daily && \
+    echo "33 11 * * * cd /app && /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" >> /etc/cron.d/chargement_repos_daily && \
     echo "" >> /etc/cron.d/chargement_repos_daily
 
 # Permissions correctes pour cron
