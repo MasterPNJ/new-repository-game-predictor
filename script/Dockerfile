@@ -17,7 +17,8 @@ ENV PYTHONUNBUFFERED=1
 
 # Créer le fichier cron avec la syntaxe correcte
 # IMPORTANT: pas de "root" dans les fichiers /etc/cron.d, et il faut un saut de ligne final
-RUN echo "54 10 * * * python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily && \
+# RUN echo "* * * * * date '+\%Y-\%m-\%d \%H:\%M:\%S' >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily && \
+RUN echo "58 10 * * * /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily && \
     echo "" >> /etc/cron.d/chargement_repos_daily
 
 # Permissions correctes pour cron
