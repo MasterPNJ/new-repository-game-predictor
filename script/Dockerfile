@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONUNBUFFERED=1
 
 # Tâche cron : exécuter main.py tous les jours à 7h (0 7 * * *)
-RUN echo "30 9 * * * python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily
+RUN echo "48 9 * * * python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily
 
 # Permissions nécessaires
 RUN chmod 0644 /etc/cron.d/chargement_repos_daily
