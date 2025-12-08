@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 from datetime import date, timedelta
 import calendar
 
+
+print("🚀 Démarrage de l'extraction multi-topics...")
+
 load_dotenv("/app/env/.env")
 
 # Config GitHub
@@ -26,6 +29,8 @@ END_DAY = None
 
 # "week", "month", "year"
 DATE_GRANULARITY = "week"
+
+print(f"Jeux à traiter : {GAMES}")
 
 def check_rate_limit():
     r = requests.get(f"{GITHUB_API_BASE}/rate_limit", headers=HEADERS)
@@ -49,6 +54,7 @@ DB_USER = os.environ["DB_USER"]
 DB_PASSWORD = os.environ["DB_PASSWORD"]
 
 # Connexion
+print(f"Connexion à la base de données ({DB_TYPE})...")
 if DB_TYPE == "mysql":
     import mysql.connector
 
@@ -94,7 +100,7 @@ def get_first_topic(game_name: str):
         return None
     return items[0]["name"]
 """
-
+print("Recherche des topics et des dépôts associés...")
 def get_topics(game_name: str, limit=2, skip=1):
     check_rate_limit()
     url = f"{GITHUB_API_BASE}/search/topics?q={game_name}"
@@ -114,6 +120,7 @@ def get_topics(game_name: str, limit=2, skip=1):
     print(f"Topics retenus pour {game_name} : {topics}")
     return topics
 
+print("Extraction des dépôts pour chaque topic...")
 def get_repositories_for_topic(
     game_name: str,
     topic: str,
@@ -266,6 +273,7 @@ def get_repositories_for_topic(
             print(f"Total for {topic}: {total_repos} repos")
             page += 1
             time.sleep(DELAY)
+
 
 # Main
 try:
