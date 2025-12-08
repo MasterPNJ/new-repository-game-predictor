@@ -53,8 +53,8 @@ if __name__ == '__main__':
     scheduler.add_job(
         run_extraction,
         'cron',
-        hour=10,
-        minute=15,
+        hour=12,
+        minute=12,
         id='extraction_github_daily'
     )
     
