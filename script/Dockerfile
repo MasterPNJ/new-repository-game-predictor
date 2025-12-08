@@ -15,13 +15,20 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Charger les variables d'environnement depuis /app/.env
 ENV PYTHONUNBUFFERED=1
 
-# Tâche cron : exécuter le script tous les jours à 7h00 (0 7 * * *)
-#RUN echo "15 10 * * * root /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily
-RUN echo "* * * * * root date '+%Y-%m-%d %H:%M:%S' >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily
+# Créer le fichier cron avec la syntaxe correcte
+# IMPORTANT: pas de "root" dans les fichiers /etc/cron.d, et il faut un saut de ligne final
+#RUN echo "15 10 * * * root /usr/local/bin/python /app/script_multi_topic.py >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily && \
+RUN echo "* * * * * date '+\%Y-\%m-\%d \%H:\%M:\%S' >> /proc/1/fd/1 2>&1" > /etc/cron.d/chargement_repos_daily && \
+    echo "" >> /etc/cron.d/chargement_repos_daily
 
+# Permissions correctes pour cron
 RUN chmod 0644 /etc/cron.d/chargement_repos_daily
 
-# Eviter d'utiliser 'crontab' sur le fichier dans /etc/cron.d (cron lit ce dossier automatiquement)
+# Appliquer la crontab
+RUN crontab /etc/cron.d/chargement_repos_daily
 
-# Démarrer cron en avant-plan pour que le conteneur reste actif
-CMD ["cron", "-f"]
+# Créer le fichier de log
+RUN touch /var/log/cron.log
+
+# Démarrer cron et afficher les logs
+CMD cron && tail -f /var/log/cron.log
