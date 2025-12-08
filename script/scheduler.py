@@ -41,7 +41,7 @@ if __name__ == '__main__':
     scheduler = BlockingScheduler()
     
     # Planifier l'exécution quotidienne à 10h15
-    scheduler.add_job(
+    job = scheduler.add_job(
         run_extraction,
         'cron',
         hour=12,
@@ -51,8 +51,7 @@ if __name__ == '__main__':
     
     logger.info("=" * 60)
     logger.info("🕐 SCHEDULER DÉMARRÉ")
-    logger.info("📅 Exécution planifiée : Tous les jours à 10h15")
-    logger.info(f"⏰ Prochaine exécution : {scheduler.get_jobs()[0].next_run_time}")
+    logger.info("📅 Exécution planifiée : Tous les jours à 7h")
     logger.info("=" * 60)
     
     # OPTIONNEL : Décommenter pour exécuter immédiatement au démarrage
@@ -61,5 +60,7 @@ if __name__ == '__main__':
     
     try:
         scheduler.start()
+        # Une fois démarré, on peut afficher la prochaine exécution
+        # logger.info(f"⏰ Prochaine exécution : {job.next_run_time}")
     except (KeyboardInterrupt, SystemExit):
         logger.info("🛑 Arrêt du scheduler")
