@@ -3,10 +3,11 @@ import logging
 import subprocess
 import sys
 
-# Configuration des logs
+# Configuration des logs pour qu'ils s'affichent dans stdout
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
 )
 logger = logging.getLogger(__name__)
 
@@ -17,17 +18,11 @@ def run_extraction():
     logger.info("=" * 60)
     
     try:
-        # Exécuter le script
+        # Exécuter le script SANS capture_output pour voir les logs en direct
         result = subprocess.run(
             [sys.executable, '/app/script_multi_topic.py'],
-            capture_output=True,
-            text=True,
             check=True
         )
-        
-        # Afficher la sortie complète
-        if result.stdout:
-            print(result.stdout)
         
         logger.info("=" * 60)
         logger.info("✅ EXTRACTION TERMINÉE AVEC SUCCÈS")
@@ -36,11 +31,7 @@ def run_extraction():
     except subprocess.CalledProcessError as e:
         logger.error("=" * 60)
         logger.error("❌ ERREUR LORS DE L'EXTRACTION")
-        logger.error("=" * 60)
-        if e.stdout:
-            logger.error(f"Sortie standard:\n{e.stdout}")
-        if e.stderr:
-            logger.error(f"Erreur standard:\n{e.stderr}")
+        logger.error(f"Code de retour: {e.returncode}")
         logger.error("=" * 60)
         
     except Exception as e:
