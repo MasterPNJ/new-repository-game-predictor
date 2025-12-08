@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  script_chargement_donnnees:
+    build: ./script
+    container_name: script_chargement_donnnees
+    restart: no
+    volumes:
+      - /home/projet_bigdata/env:/app/env:ro 
+    environment:
+      - ENV_PATH=/app/env/.env  
