@@ -40,7 +40,7 @@ def run_extraction():
 if __name__ == '__main__':
     scheduler = BlockingScheduler()
     
-    # Planifier l'exécution quotidienne à 10h15
+    # Planifier l'exécution quotidienne à 7h00
     job = scheduler.add_job(
         run_extraction,
         'cron',
@@ -61,6 +61,6 @@ if __name__ == '__main__':
     try:
         scheduler.start()
         # Une fois démarré, on peut afficher la prochaine exécution
-        # logger.info(f"⏰ Prochaine exécution : {job.next_run_time}")
+        logger.info(f"⏰ Prochaine exécution : {job.next_run_time}")
     except (KeyboardInterrupt, SystemExit):
         logger.info("🛑 Arrêt du scheduler")
