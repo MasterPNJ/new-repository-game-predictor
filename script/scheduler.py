@@ -1,0 +1,66 @@
+from apscheduler.schedulers.blocking import BlockingScheduler
+import logging
+import subprocess
+import sys
+
+# Configuration des logs pour qu'ils s'affichent dans stdout
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+logger = logging.getLogger(__name__)
+
+def run_extraction():
+    """Exécute le script d'extraction"""
+    logger.info("=" * 60)
+    logger.info("🚀 DÉMARRAGE DE L'EXTRACTION PLANIFIÉE")
+    logger.info("=" * 60)
+    
+    try:
+        # Exécuter le script SANS capture_output pour voir les logs en direct
+        result = subprocess.run(
+            [sys.executable, '/app/script_multi_topic.py'],
+            check=True
+        )
+        
+        logger.info("=" * 60)
+        logger.info("✅ EXTRACTION TERMINÉE AVEC SUCCÈS")
+        logger.info("=" * 60)
+        
+    except subprocess.CalledProcessError as e:
+        logger.error("=" * 60)
+        logger.error("❌ ERREUR LORS DE L'EXTRACTION")
+        logger.error(f"Code de retour: {e.returncode}")
+        logger.error("=" * 60)
+        
+    except Exception as e:
+        logger.error(f"❌ Erreur inattendue: {e}")
+
+if __name__ == '__main__':
+    scheduler = BlockingScheduler()
+    
+    # Planifier l'exécution quotidienne à 7h00
+    job = scheduler.add_job(
+        run_extraction,
+        'cron',
+        hour=7,
+        minute=0,
+        id='extraction_github_daily'
+    )
+    
+    logger.info("=" * 60)
+    logger.info("🕐 SCHEDULER DÉMARRÉ")
+    logger.info("📅 Exécution planifiée : Tous les jours à 7h")
+    logger.info("=" * 60)
+    
+    # OPTIONNEL : Décommenter pour exécuter immédiatement au démarrage
+    # logger.info("▶️  Exécution immédiate au démarrage...")
+    # run_extraction()
+    
+    try:
+        scheduler.start()
+        # Une fois démarré, on peut afficher la prochaine exécution
+        logger.info(f"⏰ Prochaine exécution : {job.next_run_time}")
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("🛑 Arrêt du scheduler")
