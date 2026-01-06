@@ -19,8 +19,7 @@ import mlflow.sklearn
 
 from pathlib import Path
 
-ENV_PATH = Path(__file__).resolve().parent / ".env"
-load_dotenv(dotenv_path=ENV_PATH, override=True)
+load_dotenv("/app/env/.env")
 
 
 # 0. MLflow + baseline (monitoring/retrain decision)
