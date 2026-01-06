@@ -40,16 +40,7 @@ def run_extraction():
 if __name__ == '__main__':
     scheduler = BlockingScheduler()
     
-    # Planifier l'exécution quotidienne à 7h00
-    job = scheduler.add_job(
-        run_extraction,
-        'cron',
-        hour=16, # heure UTC donc mettre 1h de moins pour heure française
-        minute=30,
-        id='extraction_github_daily'
-    )
-
-    """
+    
     job = scheduler.add_job(
         run_extraction,
         'cron',
@@ -58,7 +49,7 @@ if __name__ == '__main__':
         minute=0,
         id='pipeline_mlflow_weekly'
     )
-    """
+  
     
     logger.info("=" * 60)
     logger.info("🕐 SCHEDULER DÉMARRÉ")
