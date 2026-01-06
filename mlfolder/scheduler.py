@@ -45,7 +45,7 @@ if __name__ == '__main__':
         run_extraction,
         'cron',
         hour=15, # heure UTC donc mettre 1h de moins pour heure française
-        minute=25,
+        minute=40,
         id='extraction_github_daily'
     )
 
@@ -64,7 +64,8 @@ if __name__ == '__main__':
     logger.info("🕐 SCHEDULER DÉMARRÉ")
     logger.info("📅 Exécution planifiée : Tous les lundis à 7h")
     logger.info("=" * 60)
-    
+    logger.info(f"⏰ Prochaine exécution programmée : {job.next_run_time}")
+
     # OPTIONNEL : Décommenter pour exécuter immédiatement au démarrage
     # logger.info("▶️  Exécution immédiate au démarrage...")
     # run_extraction()
