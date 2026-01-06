@@ -45,7 +45,7 @@ if __name__ == '__main__':
         run_extraction,
         'cron',
         hour=15, # heure UTC donc mettre 1h de moins pour heure française
-        minute=40,
+        minute=50,
         id='extraction_github_daily'
     )
 
