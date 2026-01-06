@@ -44,8 +44,8 @@ if __name__ == '__main__':
     job = scheduler.add_job(
         run_extraction,
         'cron',
-        hour=15, # heure UTC donc mettre 1h de moins pour heure française
-        minute=50,
+        hour=16, # heure UTC donc mettre 1h de moins pour heure française
+        minute=0,
         id='extraction_github_daily'
     )
 
