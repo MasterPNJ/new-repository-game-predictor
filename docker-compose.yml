@@ -22,6 +22,7 @@ services:
       --port 5000
       --backend-store-uri file:/mlruns
       --default-artifact-root file:/mlruns
+      --gunicorn-opts "--forwarded-allow-ips='*' --proxy-allow-from='*'"
     expose:
       - "5000"
     volumes:
