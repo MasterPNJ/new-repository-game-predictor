@@ -20,7 +20,7 @@ def run_extraction():
     try:
         # Exécuter le script SANS capture_output pour voir les logs en direct
         result = subprocess.run(
-            [sys.executable, '/app/script_multi_topic.py'],
+            [sys.executable, '/mlfolder/main_mlflow.py'],
             check=True
         )
         
