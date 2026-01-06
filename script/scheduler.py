@@ -44,14 +44,14 @@ if __name__ == '__main__':
     job = scheduler.add_job(
         run_extraction,
         'cron',
-        hour=7,
+        hour=4, # heure UTC donc mettre 1h de moins pour heure française
         minute=0,
         id='extraction_github_daily'
     )
     
     logger.info("=" * 60)
     logger.info("🕐 SCHEDULER DÉMARRÉ")
-    logger.info("📅 Exécution planifiée : Tous les jours à 7h")
+    logger.info("📅 Exécution planifiée : Tous les jours à 5h")
     logger.info("=" * 60)
     
     # OPTIONNEL : Décommenter pour exécuter immédiatement au démarrage

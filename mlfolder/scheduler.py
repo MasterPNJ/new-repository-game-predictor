@@ -48,10 +48,21 @@ if __name__ == '__main__':
         minute=5,
         id='extraction_github_daily'
     )
+
+    """
+    job = scheduler.add_job(
+        run_extraction,
+        'cron',
+        day_of_week='mon',
+        hour=6,
+        minute=0,
+        id='pipeline_mlflow_weekly'
+    )
+    """
     
     logger.info("=" * 60)
     logger.info("🕐 SCHEDULER DÉMARRÉ")
-    logger.info("📅 Exécution planifiée : Tous les jours à 7h")
+    logger.info("📅 Exécution planifiée : Tous les lundis à 7h")
     logger.info("=" * 60)
     
     # OPTIONNEL : Décommenter pour exécuter immédiatement au démarrage
