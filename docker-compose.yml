@@ -9,3 +9,44 @@ services:
       - /home/projet_bigdata/env:/app/env:ro 
     environment:
       - ENV_PATH=/app/env/.env  
+    networks:
+      - ml_net
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    container_name: mlflow
+    restart: unless-stopped
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri file:/mlruns
+      --default-artifact-root file:/mlruns
+    expose:
+      - "5000"
+    volumes:
+      - ./mlruns:/mlruns
+    networks:
+      - ml_net
+      - proxy_net
+  
+  trainer:
+    build: ./mlfolder
+    container_name: trainer
+    restart: unless-stopped
+    volumes:
+      - ./state:/state
+      - ./mlruns:/mlruns
+      - /home/projet_bigdata/env:/app/env:ro 
+    environment:
+      - ENV_PATH=/app/env/.env  
+    depends_on:
+      - mlflow
+    networks:
+      - ml_net
+
+networks:
+  ml_net:
+    driver: bridge
+  proxy_net:
+    external: true
