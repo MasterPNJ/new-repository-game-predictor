@@ -20,7 +20,7 @@ def run_extraction():
     try:
         # Exécuter le script SANS capture_output pour voir les logs en direct
         result = subprocess.run(
-            [sys.executable, '/mlfolder/main_mlflow.py'],
+            [sys.executable, '/app/main_mlflow.py'],
             check=True
         )
         
@@ -44,8 +44,8 @@ if __name__ == '__main__':
     job = scheduler.add_job(
         run_extraction,
         'cron',
-        hour=7,
-        minute=0,
+        hour=15, # heure UTC donc mettre 1h de moins pour heure française
+        minute=5,
         id='extraction_github_daily'
     )
     
