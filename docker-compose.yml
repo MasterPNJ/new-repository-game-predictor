@@ -22,7 +22,7 @@ services:
       --port 5000
       --backend-store-uri file:/mlruns
       --default-artifact-root file:/mlruns
-      --gunicorn-opts "--forwarded-allow-ips='*' --proxy-allow-from='*'"
+      --allowed-hosts "*.le-luet.fr,localhost,127.0.0.1"
     expose:
       - "5000"
     volumes:
