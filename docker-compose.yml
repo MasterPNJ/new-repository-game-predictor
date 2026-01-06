@@ -22,7 +22,7 @@ services:
       --port 5000
       --backend-store-uri file:/mlruns
       --default-artifact-root file:/mlruns
-      --allowed-hosts "*.le-luet.fr,localhost,127.0.0.1"
+      --allowed-hosts "mlflow.bigdata.le-luet.fr,mlflow,localhost,127.0.0.1"
     expose:
       - "5000"
     volumes:
