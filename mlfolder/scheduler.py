@@ -64,7 +64,6 @@ if __name__ == '__main__':
     logger.info("🕐 SCHEDULER DÉMARRÉ")
     logger.info("📅 Exécution planifiée : Tous les lundis à 7h")
     logger.info("=" * 60)
-    logger.info(f"⏰ Prochaine exécution programmée : {job.next_run_time}")
 
     # OPTIONNEL : Décommenter pour exécuter immédiatement au démarrage
     # logger.info("▶️  Exécution immédiate au démarrage...")
