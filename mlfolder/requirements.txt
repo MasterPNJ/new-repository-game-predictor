@@ -2,3 +2,13 @@ requests
 python-dotenv
 mysql-connector-python
 apscheduler
+statsmodels
+prophet
+plotly
+lightgbm
+xgboost
+mlflow
+pandas
+numpy
+scikit-learn
+matplotlib
