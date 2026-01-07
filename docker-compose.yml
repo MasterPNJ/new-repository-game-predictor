@@ -26,7 +26,7 @@ services:
     expose:
       - "5000"
     volumes:
-      - ./mlruns:/mlruns
+      - /home/projet_bigdata/mlflow/mlruns:/mlruns
     networks:
       - ml_net
       - proxy_net
@@ -36,8 +36,8 @@ services:
     container_name: trainer
     restart: unless-stopped
     volumes:
-      - ./state:/state
-      - ./mlruns:/mlruns
+      - /home/projet_bigdata/mlflow/state:/state
+      - /home/projet_bigdata/mlflow/mlruns:/mlruns
       - /home/projet_bigdata/env:/app/env:ro 
     environment:
       - ENV_PATH=/app/env/.env  
