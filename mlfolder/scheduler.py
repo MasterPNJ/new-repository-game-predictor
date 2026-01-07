@@ -44,8 +44,8 @@ if __name__ == '__main__':
     job = scheduler.add_job(
         run_extraction,
         'cron',
-        #day_of_week='mon',
-        hour=8,
+        day_of_week='mon',
+        hour=6,
         minute=0,
         id='pipeline_mlflow_weekly'
     )
