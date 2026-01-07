@@ -45,8 +45,8 @@ if __name__ == '__main__':
         run_extraction,
         'cron',
         #day_of_week='mon',
-        hour=7,
-        minute=50,
+        hour=8,
+        minute=0,
         id='pipeline_mlflow_weekly'
     )
   
