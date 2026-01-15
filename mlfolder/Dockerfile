@@ -19,5 +19,3 @@ ENV PYTHONUNBUFFERED=1
 
 # Lancer le scheduler
 CMD ["python", "scheduler.py"]
-
-# pour victor
