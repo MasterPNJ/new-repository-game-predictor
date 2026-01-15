@@ -4,13 +4,14 @@ from itertools import product
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 from .metrics import compute_mae_rmse
+from . import config
 
 
 def sarima_grid_search(train: pd.Series, dev: pd.Series, order_candidates=None, seasonal_candidates=None) -> dict:
     if order_candidates is None:
-        order_candidates = [(1, 1, 0), (1, 1, 1), (2, 1, 0)]
+        order_candidates = config.SARIMA_ORDER_CANDIDATES
     if seasonal_candidates is None:
-        seasonal_candidates = [(0, 1, 1, 52), (1, 1, 1, 52)]
+        seasonal_candidates = config.SARIMA_SEASONAL_CANDIDATES
 
     best_config = None
     best_score = np.inf

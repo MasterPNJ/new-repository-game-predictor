@@ -3,6 +3,7 @@ from lightgbm import LGBMRegressor
 from xgboost import XGBRegressor
 
 from .metrics import compute_mae_rmse
+from . import config
 
 
 def train_lightgbm_model(train_df: pd.DataFrame) -> LGBMRegressor:
@@ -10,13 +11,13 @@ def train_lightgbm_model(train_df: pd.DataFrame) -> LGBMRegressor:
     y = train_df["y"]
 
     model = LGBMRegressor(
-        n_estimators=500,
-        learning_rate=0.05,
-        max_depth=-1,
-        subsample=0.8,
-        colsample_bytree=0.8,
+        n_estimators=config.N_ESTIMATORS,
+        learning_rate=config.LEARNING_RATE,
+        max_depth=config.LGBM_MAX_DEPTH,
+        subsample=config.SUBSAMPLE,
+        colsample_bytree=config.COLSAMPLE_BYTREE,
         objective="regression",
-        random_state=42,
+        random_state=config.RANDOM_STATE,
     )
     model.fit(X, y)
     return model
@@ -27,13 +28,13 @@ def train_xgboost_model(train_df: pd.DataFrame) -> XGBRegressor:
     y = train_df["y"]
 
     model = XGBRegressor(
-        n_estimators=500,
-        learning_rate=0.05,
-        max_depth=5,
-        subsample=0.8,
-        colsample_bytree=0.8,
+        n_estimators=config.N_ESTIMATORS,
+        learning_rate=config.LEARNING_RATE,
+        max_depth=config.XGB_MAX_DEPTH,
+        subsample=config.SUBSAMPLE,
+        colsample_bytree=config.COLSAMPLE_BYTREE,
         objective="reg:squarederror",
-        random_state=42,
+        random_state=config.RANDOM_STATE,
     )
     model.fit(X, y)
     return model

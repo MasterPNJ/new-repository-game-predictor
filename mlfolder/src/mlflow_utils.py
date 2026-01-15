@@ -4,6 +4,7 @@ from datetime import datetime
 
 import pandas as pd
 import mlflow
+from . import config
 
 
 def setup_mlflow(experiment_name: str = "github_repos_forecasting"):
@@ -31,7 +32,9 @@ def save_baseline(path: str, best_model: str, mae: float, rmse: float):
         json.dump(payload, f, indent=2)
 
 
-def log_data_monitoring(ts_weekly: pd.Series, ref_window: int = 52) -> dict:
+def log_data_monitoring(ts_weekly: pd.Series, ref_window: int = None) -> dict:
+    if ref_window is None:
+        ref_window = config.DRIFT_REF_WINDOW
     if len(ts_weekly) < 2 * ref_window:
         mlflow.log_param("data_drift", False)
         mlflow.log_param("data_drift_reason", "not_enough_history")
@@ -55,11 +58,11 @@ def log_data_monitoring(ts_weekly: pd.Series, ref_window: int = 52) -> dict:
     mlflow.log_metric("data_mean_shift_ratio", float(mean_shift))
     mlflow.log_metric("data_std_shift_ratio", float(std_shift))
 
-    drift = (mean_shift > 0.25) or (std_shift > 0.25)
+    drift = (mean_shift > config.DRIFT_MEAN_SHIFT_THRESHOLD) or (std_shift > config.DRIFT_STD_SHIFT_THRESHOLD)
     reasons = []
-    if mean_shift > 0.25:
+    if mean_shift > config.DRIFT_MEAN_SHIFT_THRESHOLD:
         reasons.append("mean_shift")
-    if std_shift > 0.25:
+    if std_shift > config.DRIFT_STD_SHIFT_THRESHOLD:
         reasons.append("std_shift")
 
     reason = ",".join(reasons) if reasons else "none"
@@ -73,6 +76,6 @@ def should_retrain(current_rmse: float, baseline_rmse: float | None, data_drift:
         return True, "no_baseline"
     if data_drift:
         return True, "data_drift"
-    if current_rmse > 1.30 * baseline_rmse:
+    if current_rmse > config.RETRAIN_RMSE_THRESHOLD_RATIO * baseline_rmse:
         return True, "perf_degradation"
     return False, "ok"

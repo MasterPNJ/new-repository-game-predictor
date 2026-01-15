@@ -3,15 +3,11 @@ import pandas as pd
 from prophet import Prophet
 
 from .metrics import compute_mae_rmse
+from . import config
 
 def prophet_grid_search(train: pd.Series, dev: pd.Series, param_grid: list | None = None) -> dict:
     if param_grid is None:
-        param_grid = [
-            {"yearly_seasonality": True, "seasonality_mode": "additive", "changepoint_prior_scale": 0.05},
-            {"yearly_seasonality": True, "seasonality_mode": "multiplicative", "changepoint_prior_scale": 0.05},
-            {"yearly_seasonality": True, "seasonality_mode": "additive", "changepoint_prior_scale": 0.5},
-            {"yearly_seasonality": True, "seasonality_mode": "multiplicative", "changepoint_prior_scale": 0.5},
-        ]
+        param_grid = config.PROPHET_PARAM_GRID
 
     best_config = None
     best_score = np.inf

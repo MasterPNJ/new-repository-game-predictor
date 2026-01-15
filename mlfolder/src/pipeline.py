@@ -21,13 +21,13 @@ from .plotting import save_test_comparison_plot
 
 
 def main():
-    GAME_NAME = "minecraft"
-    N_TEST = 24
-    N_DEV = 48
-    MAX_LAG = 12
-    START_DATES = [None, "2020-01-01"]
+    GAME_NAME = config.GAME_NAME
+    N_TEST = config.N_TEST
+    N_DEV = config.N_DEV
+    MAX_LAG = config.MAX_LAG
+    START_DATES = config.START_DATES
 
-    tracking_uri = setup_mlflow("github_repos_forecasting")
+    tracking_uri = setup_mlflow(config.MLFLOW_EXPERIMENT_NAME)
     print("MLflow version:", mlflow.__version__)
     print("MLflow tracking URI:", tracking_uri)
 
@@ -55,7 +55,7 @@ def main():
             mlflow.log_metric("n_weeks_total", float(len(ts_weekly)))
 
             # Data monitoring (drift)
-            drift_info = log_data_monitoring(ts_weekly, ref_window=52)
+            drift_info = log_data_monitoring(ts_weekly, ref_window=config.DRIFT_REF_WINDOW)
 
             # Split
             splits = split_series_last_n_weeks(ts_weekly, n_test=N_TEST, n_dev=N_DEV)
@@ -118,8 +118,8 @@ def main():
                 mlflow.log_param("model", "LightGBM")
                 mlflow.log_param("max_lag", MAX_LAG)
                 # Log the model hyperparams (key ones)
-                mlflow.log_param("n_estimators", 500)
-                mlflow.log_param("learning_rate", 0.05)
+                mlflow.log_param("n_estimators", config.N_ESTIMATORS)
+                mlflow.log_param("learning_rate", config.LEARNING_RATE)
                 mlflow.log_metric("mae_test", lgbm_metrics["mae"])
                 mlflow.log_metric("rmse_test", lgbm_metrics["rmse"])
 
@@ -136,8 +136,8 @@ def main():
             with mlflow.start_run(run_name=f"{GAME_NAME}_XGBoost", nested=True):
                 mlflow.log_param("model", "XGBoost")
                 mlflow.log_param("max_lag", MAX_LAG)
-                mlflow.log_param("n_estimators", 500)
-                mlflow.log_param("learning_rate", 0.05)
+                mlflow.log_param("n_estimators", config.N_ESTIMATORS)
+                mlflow.log_param("learning_rate", config.LEARNING_RATE)
                 mlflow.log_metric("mae_test", xgb_metrics["mae"])
                 mlflow.log_metric("rmse_test", xgb_metrics["rmse"])
 
