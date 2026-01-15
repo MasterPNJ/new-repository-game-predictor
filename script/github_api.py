@@ -1,38 +1,14 @@
-import os
+"""GitHub API interactions module."""
+
 import time
 import requests
-from dotenv import load_dotenv
 from datetime import date, timedelta
 import calendar
+from script.config import GITHUB_API_BASE, HEADERS, DELAY, DATE_GRANULARITY
 
-
-print("🚀 Démarrage de l'extraction multi-topics...")
-
-load_dotenv("/app/env/.env")
-
-# Config GitHub
-GITHUB_API_BASE = "https://api.github.com"
-HEADERS = {"Accept": "application/vnd.github+json"}
-if os.getenv("GITHUB_TOKEN"):
-    HEADERS["Authorization"] = f"Bearer {os.environ['GITHUB_TOKEN']}"
-
-GAMES = ["minecraft"]
-DELAY = 1
-
-START_YEAR = 2025
-START_MONTH = 9
-START_DAY = 1
-
-END_YEAR = None
-END_MONTH = None
-END_DAY = None
-
-# "week", "month", "year"
-DATE_GRANULARITY = "week"
-
-print(f"Jeux à traiter : {GAMES}")
 
 def check_rate_limit():
+    """Check GitHub API rate limit and wait if necessary."""
     r = requests.get(f"{GITHUB_API_BASE}/rate_limit", headers=HEADERS)
     if r.status_code == 200:
         data = r.json()
@@ -45,63 +21,18 @@ def check_rate_limit():
                 time.sleep(wait_time)
     return True
 
-# Config BDD
-DB_TYPE = os.environ.get("DB_TYPE", "postgresql").lower()
-DB_HOST = os.environ["DB_HOST"]
-DB_PORT = os.environ["DB_PORT"]
-DB_NAME = os.environ["DB_NAME"]
-DB_USER = os.environ["DB_USER"]
-DB_PASSWORD = os.environ["DB_PASSWORD"]
 
-# Connexion
-print(f"Connexion à la base de données ({DB_TYPE})...")
-if DB_TYPE == "mysql":
-    import mysql.connector
-
-    conn = mysql.connector.connect(
-        host=DB_HOST, port=DB_PORT, database=DB_NAME,
-        user=DB_USER, password=DB_PASSWORD,
-    )
-    cur = conn.cursor()
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS repositories (
-        id_repo BIGINT NOT NULL PRIMARY KEY,
-        game_name VARCHAR(100) NOT NULL,
-        topic VARCHAR(100) NOT NULL,
-        create_at DATE NOT NULL,
-        updated_at DATE NOT NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-    """)
-    conn.commit()
-
-    def insert_rows(rows):
-        sql = """
-        INSERT IGNORE INTO repositories
-        (id_repo, game_name, topic, create_at, updated_at)
-        VALUES (%s, %s, %s, DATE(%s), DATE(%s))
-        """
-        cur.executemany(sql, rows)
-        conn.commit()
-else:
-    raise RuntimeError("DB_TYPE doit être 'mysql'")
-
-# GitHub: topics & repos
-"""
-def get_first_topic(game_name: str):
-    check_rate_limit()
-    url = f"{GITHUB_API_BASE}/search/topics?q={game_name}"
-    r = requests.get(url, headers=HEADERS)
-    if r.status_code != 200:
-        print(f"Erreur ({r.status_code}) recherche topic pour {game_name}: {r.text[:200]}")
-        return None
-    items = r.json().get("items", [])
-    if not items:
-        print(f"Aucun topic trouvé pour {game_name}")
-        return None
-    return items[0]["name"]
-"""
-print("Recherche des topics et des dépôts associés...")
 def get_topics(game_name: str, limit=2, skip=1):
+    """Fetch topics related to a game name.
+    
+    Args:
+        game_name (str): Name of the game
+        limit (int): Number of topics to return
+        skip (int): Number of topics to skip
+        
+    Returns:
+        list: List of topic names
+    """
     check_rate_limit()
     url = f"{GITHUB_API_BASE}/search/topics?q={game_name}"
     r = requests.get(url, headers=HEADERS)
@@ -116,12 +47,12 @@ def get_topics(game_name: str, limit=2, skip=1):
         return []
 
     topics = [item["name"] for item in items][skip:skip+limit]
-
     print(f"Topics retenus pour {game_name} : {topics}")
     return topics
 
-print("Extraction des dépôts pour chaque topic...")
+
 def get_repositories_for_topic(
+    insert_rows_func,
     game_name: str,
     topic: str,
     start_year=2008,
@@ -139,6 +70,18 @@ def get_repositories_for_topic(
     - "month": month by month
     - "week": 7-day blocks
     - "day": day by day
+    
+    Args:
+        insert_rows_func: Callback function to insert rows into database
+        game_name (str): Name of the game
+        topic (str): GitHub topic to search
+        start_year (int): Start year
+        start_month (int): Start month
+        start_day (int): Start day
+        end_year (int, optional): End year
+        end_month (int, optional): End month
+        end_day (int, optional): End day
+        granularity (str, optional): Date granularity ("month", "week", "day")
     """
 
     # Use global default if not provided
@@ -263,7 +206,7 @@ def get_repositories_for_topic(
                     repo["updated_at"][:10]
                 ))
 
-            insert_rows(rows)
+            insert_rows_func(rows)
             batch_count = len(items)
             total_repos += batch_count
             print(
@@ -273,49 +216,3 @@ def get_repositories_for_topic(
             print(f"Total for {topic}: {total_repos} repos")
             page += 1
             time.sleep(DELAY)
-
-
-# Main
-try:
-    for game in GAMES:
-        print(f"\n=== Recherche pour le jeu : {game} ===")
-        """
-        topic = get_first_topic(game)
-        if topic:
-            print(f"Topic trouvé : {topic}")
-            get_repositories_for_topic(game, topic)
-        else:
-            print(f"Aucun topic trouvé pour {game}")
-        time.sleep(DELAY)
-        """
-        topics = get_topics(game, limit=12, skip=0)
-        if topics:
-            for topic in topics:
-                print(f"Topic utilisé : {topic}")
-                get_repositories_for_topic(
-                    game,
-                    topic,
-                    START_YEAR,
-                    START_MONTH,
-                    START_DAY,
-                    END_YEAR,
-                    END_MONTH,
-                    END_DAY,
-                    DATE_GRANULARITY,
-                )
-                time.sleep(DELAY)
-
-        else:
-            print(f"Aucun topic trouvé pour {game}")
-
-finally:
-    try:
-        cur.close()
-    except Exception:
-        pass
-    try:
-        conn.close()
-    except Exception:
-        pass
-
-print("✅ Extraction terminée.")
