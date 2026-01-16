@@ -20,7 +20,7 @@ def run_extraction():
     try:
         # Exécuter le script SANS capture_output pour voir les logs en direct
         result = subprocess.run(
-            [sys.executable, '/app/src/__main__.py'],
+            [sys.executable, "-m", "src"],
             check=True
         )
         
