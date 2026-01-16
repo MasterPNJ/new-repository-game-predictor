@@ -31,16 +31,16 @@ def sarima_grid_search(train: pd.Series, dev: pd.Series, order_candidates=None, 
             metrics = compute_mae_rmse(dev.values, forecast.values)
             mae = metrics["mae"]
 
-            config = {
+            run_config = {
                 "order": order,
                 "seasonal_order": seasonal_order,
                 "mae_dev": mae,
                 "rmse_dev": metrics["rmse"],
             }
-            all_results.append(config)
+            all_results.append(run_config)
             if mae < best_score:
                 best_score = mae
-                best_config = config
+                best_config = run_config
 
         except Exception as e:
             print(f"Failed SARIMA order={order}, seasonal={seasonal_order}: {e}")
