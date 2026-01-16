@@ -20,7 +20,7 @@ def run_extraction():
     try:
         # Exécuter le script SANS capture_output pour voir les logs en direct
         result = subprocess.run(
-            [sys.executable, '/app/src/__main__.py'],
+            [sys.executable, '/app/src/pipeline.py'],
             check=True
         )
         
@@ -46,7 +46,7 @@ if __name__ == '__main__':
         'cron',
         day_of_week='mon',
         hour=13,
-        minute=20,
+        minute=35,
         id='pipeline_mlflow_weekly'
     )
   
