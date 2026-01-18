@@ -1,9 +1,9 @@
 """Main extraction pipeline for multi-topic GitHub repositories."""
 
 import time
-from script.config import GAMES, DELAY, START_YEAR, START_MONTH, START_DAY, END_YEAR, END_MONTH, END_DAY, DATE_GRANULARITY
-from script.database import connect_to_database, close_connection, insert_rows as db_insert_rows
-from script.github_api import get_topics, get_repositories_for_topic
+from .config import GAMES, DELAY, START_YEAR, START_MONTH, START_DAY, END_YEAR, END_MONTH, END_DAY, DATE_GRANULARITY
+from .database import connect_to_database, close_connection, insert_rows as db_insert_rows
+from .github_api import get_topics, get_repositories_for_topic
 
 
 def main():
