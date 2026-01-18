@@ -1,7 +1,7 @@
 """Database connection and operations module."""
 
 import mysql.connector
-from script.config import DB_TYPE, DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
+from .config import DB_TYPE, DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
 
 
 def connect_to_database():

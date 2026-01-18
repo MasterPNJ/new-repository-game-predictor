@@ -4,7 +4,7 @@ import time
 import requests
 from datetime import date, timedelta
 import calendar
-from script.config import GITHUB_API_BASE, HEADERS, DELAY, DATE_GRANULARITY
+from .config import GITHUB_API_BASE, HEADERS, DELAY, DATE_GRANULARITY
 
 
 def check_rate_limit():
