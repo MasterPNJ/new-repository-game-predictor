@@ -18,6 +18,7 @@ from .sarima import sarima_grid_search, evaluate_sarima_on_test
 from .prophet_utils import prophet_grid_search, evaluate_prophet_on_test
 from .models_ml import train_lightgbm_model, train_xgboost_model, evaluate_ml_model
 from .plotting import save_test_comparison_plot
+from .predict import predict_next_week
 
 
 def main():
@@ -117,7 +118,7 @@ def main():
             with mlflow.start_run(run_name=f"{GAME_NAME}_LightGBM", nested=True):
                 mlflow.log_param("model", "LightGBM")
                 mlflow.log_param("max_lag", MAX_LAG)
-                # Log the model hyperparams (key ones)
+                # Log the model hyperparams
                 mlflow.log_param("n_estimators", config.N_ESTIMATORS)
                 mlflow.log_param("learning_rate", config.LEARNING_RATE)
                 mlflow.log_metric("mae_test", lgbm_metrics["mae"])
@@ -186,5 +187,34 @@ def main():
                 mlflow.log_param("baseline_updated", True)
             else:
                 mlflow.log_param("baseline_updated", False)
+
+            model_configs_map = {
+                "SARIMA": best_sarima,
+                "Prophet": best_prophet,
+                "LightGBM": None,
+                "XGBoost": None
+            }
+            
+            # On appelle la fonction en lui passant la config du meilleur
+            target_date, pred_value = predict_next_week(
+                ts_weekly=ts_weekly,
+                model_name=best_name,
+                model_config=model_configs_map.get(best_name),
+                max_lag=MAX_LAG
+            )
+
+            print(f"Prédiction pour la semaine du {target_date.date()} : {pred_value:.2f}")
+            mlflow.log_metric("forecast_t_plus_1", pred_value)
+            
+            forecast_df = pd.DataFrame({
+                "date_prediction": [pd.Timestamp.now()],
+                "target_week": [target_date],
+                "model_used": [best_name],
+                "predicted_value": [pred_value]
+            })
+            
+            forecast_path = f"forecast_next_week_{strategy_tag}.csv"
+            forecast_df.to_csv(forecast_path, index=False)
+            mlflow.log_artifact(forecast_path)
 
     print("Done.")
