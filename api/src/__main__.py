@@ -1,8 +1,8 @@
-import uvicorn
-from .routes import app
+from fastapi import FastAPI
+from .fonctions import predict
 
-def main():
-    uvicorn.run(app, host="0.0.0.0", port=5656)
+app = FastAPI()
 
-if __name__ == "__main__":
-    main()
+@app.get("/predict")
+def run_function():
+    return predict()

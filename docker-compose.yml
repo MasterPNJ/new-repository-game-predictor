@@ -46,6 +46,20 @@ services:
     networks:
       - ml_net
 
+
+  api:
+    build: ./api
+    container_name: api
+    restart: unless-stopped
+    expose:
+      - 6767
+    depends_on:
+      - script_chargement_donnnees
+      - trainer
+    networks:
+      - ml_net
+      - proxy_net
+
 networks:
   ml_net:
     driver: bridge
