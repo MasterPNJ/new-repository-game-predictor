@@ -1,6 +1,7 @@
 import pandas as pd
 import mlflow
 import mlflow.sklearn
+import numpy as np
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from prophet import Prophet
 
