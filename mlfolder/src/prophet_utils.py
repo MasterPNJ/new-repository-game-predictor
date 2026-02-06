@@ -28,7 +28,7 @@ def prophet_grid_search(train: pd.Series, dev: pd.Series, param_grid: list | Non
             )
             m.fit(train_df)
 
-            joblib.save(m, "models/prophet_model.pkl")
+            joblib.dump(m, "models/prophet_model.pkl")
 
             future = m.make_future_dataframe(periods=len(dev), freq="W-MON")
             forecast = m.predict(future)

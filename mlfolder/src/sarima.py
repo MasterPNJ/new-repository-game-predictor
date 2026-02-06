@@ -58,7 +58,7 @@ def evaluate_sarima_on_test(train_dev: pd.Series, test: pd.Series, order: tuple,
         enforce_invertibility=False,
     )
 
-    joblib.save(model, "models/sarima_model.pkl")
+    joblib.dump(model, "models/sarima_model.pkl")
 
     results = model.fit(disp=False)
     forecast = results.forecast(steps=len(test))
