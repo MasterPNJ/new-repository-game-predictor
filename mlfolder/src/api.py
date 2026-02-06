@@ -8,7 +8,7 @@ app = FastAPI()
 @app.get("/predict")
 def run_function(model: str):
 
-    if model == "sarima":
+    if model.lower() == "sarima":
         return {"error": f"Modèle inconnu : {model}"}
     
     prediction = predict_next_week(
