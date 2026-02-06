@@ -30,4 +30,4 @@ def run_script_chargement():
     train_thread = threading.Thread(target=load_in_background, daemon=True)
     train_thread.start()
     
-    return {"message": "Chargement des données a démarré."}
+    return {"message": "Le chargement des données a démarré."}
