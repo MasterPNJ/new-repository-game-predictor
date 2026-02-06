@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .fonctions import predict, get_models, train
+from .fonctions import predict, get_models, train, load_data
 
 app = FastAPI()
 
@@ -14,3 +14,7 @@ def run_function():
 @app.get("/train")
 def run_train():
     return train()
+
+@app.get("/load_data")
+def run_load_data():
+    return load_data()

@@ -5,6 +5,8 @@ services:
     build: ./script
     container_name: script_chargement_donnnees
     restart: unless-stopped
+    expose:
+      - 6769
     volumes:
       - /home/projet_bigdata/env:/app/env:ro 
     environment:
