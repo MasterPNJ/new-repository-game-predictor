@@ -10,7 +10,7 @@ def run_function(model: str):
     prediction = predict_next_week(
         ts_weekly=load_weekly_series(
                 game_name=config.GAME_NAME,
-                start_date=config.START_DATES,
+                start_date=config.START_DATES[1],
                 verbose=True,
             ),
         model_name=model,
