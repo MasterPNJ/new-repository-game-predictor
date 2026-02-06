@@ -4,9 +4,24 @@ import mlflow.sklearn
 import numpy as np
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from prophet import Prophet
+import joblib
+import os
 
 from .features import make_ml_features
 from .models_ml import train_lightgbm_model, train_xgboost_model
+
+
+def load_model(model_name, model_path=None):
+    """Charge un modèle sauvegardé"""
+    if model_path is None:
+        model_path = f"models/{model_name}_model.pkl"
+    
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Modèle non trouvé: {model_path}")
+    
+    return joblib.load(model_path)
+
+
 
 def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
     """
@@ -35,13 +50,8 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
 
     # Prophet
     elif model_name == "prophet":
-        params = model_config["params"] if model_config else {}
-        m = Prophet(**params)
-        
-        df_full_prophet = ts_weekly.reset_index()
-        df_full_prophet.columns = ['ds', 'y']
-        
-        m.fit(df_full_prophet)
+
+        m = load_model(model_name)
         
         future = m.make_future_dataframe(periods=1, freq='W')
         forecast = m.predict(future)
@@ -51,23 +61,16 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
     elif model_name in ["lightgbm", "xgboost"]:
         ts_extended = ts_weekly.copy()
         ts_extended.loc[next_week_date] = np.nan 
-        
+    
         # Génération features
         df_ml_extended = make_ml_features(ts_extended, max_lag=max_lag)
-        
-        # Séparation Train / Prediction
-        X_future = df_ml_extended.iloc[[-1]].copy()
-        if 'target' in X_future.columns:
-            X_future = X_future.drop(columns=['target'])
-        df_train_full = df_ml_extended.iloc[:-1].dropna()
-        
-        if model_name == "lightgbm":
-            model_full = train_lightgbm_model(df_train_full)
-            prediction = model_full.predict(X_future)[0]
-            
-        elif model_name == "xgboost":
-            model_full = train_xgboost_model(df_train_full)
-            prediction = model_full.predict(X_future)[0]
+    
+        # Récupérer les features de la dernière ligne (SANS target/label)
+        X_future = df_ml_extended.iloc[[-1]].drop(columns=['target'], errors='ignore')
+    
+        model_full = load_model(model_name)
+        prediction = model_full.predict(X_future)[0]
+
     
     else:
         return {"error": f"Modèle inconnu : {model_name}"}

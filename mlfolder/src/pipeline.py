@@ -1,6 +1,7 @@
 import pandas as pd
 import mlflow
 import mlflow.sklearn
+import joblib
 
 from . import config  # load_dotenv("/app/env/.env")
 
@@ -113,6 +114,7 @@ def main():
 
             # LightGBM
             lgbm_model = train_lightgbm_model(train_ml_df)
+            joblib.save(lgbm_model, "models/lightgbm_model.pkl")
             lgbm_metrics, lgbm_pred_df = evaluate_ml_model(lgbm_model, df_full=df_ml, test_index=test.index)
 
             with mlflow.start_run(run_name=f"{GAME_NAME}_LightGBM", nested=True):
@@ -132,6 +134,7 @@ def main():
 
             # XGBoost
             xgb_model = train_xgboost_model(train_ml_df)
+            joblib.save(xgb_model, "models/xgboost_model.pkl")
             xgb_metrics, xgb_pred_df = evaluate_ml_model(xgb_model, df_full=df_ml, test_index=test.index)
 
             with mlflow.start_run(run_name=f"{GAME_NAME}_XGBoost", nested=True):

@@ -16,4 +16,20 @@ def predict(model: str):
 
 
 def get_models():
-    pass
+    """Appelle l'API du container trainer pour récupérer la liste des modèles disponibles"""
+    try:
+        response = requests.get(f"{TRAINER_API_URL}/models")
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Erreur lors de l'appel à trainer: {str(e)}"}
+
+
+def train():
+    """Appelle l'API du container trainer pour lancer l'entraînement complet"""
+    try:
+        response = requests.get(f"{TRAINER_API_URL}/train")
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Erreur lors de l'appel à trainer: {str(e)}"}
