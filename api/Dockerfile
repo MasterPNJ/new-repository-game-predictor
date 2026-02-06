@@ -17,5 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Variables d'environnement
 ENV PYTHONUNBUFFERED=1
 
+ENV PYTHONPATH=/app/src
+
 # Lancer le scheduler
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "6767"]
