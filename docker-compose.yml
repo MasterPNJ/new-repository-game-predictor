@@ -25,7 +25,6 @@ services:
       --allowed-hosts "*"
     expose:
       - "5000"
-      - "6767"
     volumes:
       - /home/projet_bigdata/mlflow/mlruns:/mlruns
     networks:
@@ -41,7 +40,9 @@ services:
       - /home/projet_bigdata/mlflow/mlruns:/mlruns
       - /home/projet_bigdata/env:/app/env:ro 
     environment:
-      - ENV_PATH=/app/env/.env  
+      - ENV_PATH=/app/env/.env 
+    expose:
+      - 6768
     depends_on:
       - mlflow
     networks:
