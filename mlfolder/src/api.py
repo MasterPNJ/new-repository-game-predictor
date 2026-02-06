@@ -21,4 +21,4 @@ def run_function(model: str):
 
 @app.get("/models")
 def run_function():
-    return get_models()
+    pass
