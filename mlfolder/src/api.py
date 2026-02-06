@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from .fonctions import predict, get_models
 
 app = FastAPI()
 
