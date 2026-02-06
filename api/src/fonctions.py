@@ -1,12 +1,12 @@
 import requests
 
-MLFOLDER_API_URL = "http://mlfolder:6767"
+MLFLOW_API_URL = "http://mlflow:6767"
 
 def predict(model: str):
     """Appelle l'API du container mlfolder pour faire une prédiction"""
     try:
         response = requests.get(
-            f"{MLFOLDER_API_URL}/predict",
+            f"{MLFLOW_API_URL}/predict",
             params={"model": model}
         )
         response.raise_for_status()
