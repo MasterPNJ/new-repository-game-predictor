@@ -66,7 +66,7 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
         df_ml_extended = make_ml_features(ts_extended, max_lag=max_lag)
     
         # Récupérer les features de la dernière ligne (SANS target/label)
-        X_future = df_ml_extended.iloc[[-1]].drop(columns=['target'], errors='ignore')
+        X_future = df_ml_extended.iloc[[-1]].drop(columns=['target', 'y'], errors='ignore')
     
         model_full = load_model(model_name)
         prediction = model_full.predict(X_future)[0]
