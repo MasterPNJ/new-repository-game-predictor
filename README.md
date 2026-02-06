@@ -1,40 +1,40 @@
 # New Repository Game Predictor 
 
-**Project for Master 2 – Predict GitHub Repository Creation Trends**
+**Projet de Master 2 – Prédire les tendences de création sur github**
 
-This project aims to use the GitHub API to **predict the number of new repositories created weekly** for a specified game. It uses machine learning models that are retrained weekly, automatically choosing the best model for prediction based on past data.
+Ce projet à pour objectif d'utiliser l'API Github afin de **prédire le nombre de nouveau répertoires créer par semaines** pour un jeux spécifié. Il utilise des modèles de machine larning qui sont réentrainé par semaine, automatique en choisissant le modèle pour effectuer une prédiction en se basant sur des données des semaines passées. 
 
 ---
 
 ## Features
 
-- **Weekly Prediction**  
-  Predicts how many new GitHub repositories will be created in the next week for a specified game. :contentReference[oaicite:2]{index=2}
+- **Prediction hebdomadaire**
+  Predire combien de nouveaux repertoires Github seront créer la semaine prochaine pour un jeu précis.
 
-- **Multiple Machine Learning Models**  
-  Retrains and compares several models weekly, then selects the best model to use for predictions. :contentReference[oaicite:3]{index=3}
+- **Plusieurs modèles de Machine Learning**
+  Réentraine et compare plusieurs modèles chaques semaines puis séléctionne le meilleur pour effectuer les prédictions.
 
-- **Automated Training & Data Collection**  
-  Entire pipeline from data collection to retraining and prediction is automated. :contentReference[oaicite:4]{index=4}
+- **Entrainement et récolte de données automatiques**
+  Toute la chaîn de traitement depui la collecte des données jusqu'au réentrainement et la prédictions sont automatisés
 
--  **API Endpoints Available**  
-  Includes APIs for:
-  -  Manual training
-  -  Data collection
-  -  Making predictions :
-
----
-
-## Tech Stack
--  **Python** – core logic and models :contentReference[oaicite:6]{index=6}  
--  **Docker** & **docker-compose** – containerization and setup :contentReference[oaicite:7]{index=7}  
--  Machine Learning libraries (e.g., scikit-learn, pandas, etc.) – for training and inference (assumed typical stack)
+- **Endpoints API**
+  Inclut des requêtes API pour :
+    - Entraîné manuellement : 
+    - Collecter les données : 
+    - Faire des prédictions : 
 
 ---
 
-##  Getting Started
+## Technologies utilisés
+- **Python** - pour les modèles et le projet de manière général
+- **Docker** & **docker-compose** - containerisation et mise en place
+- Librairie de Machine Learning (ex cikit-learn, pandas, etc) pour l'entrainement
 
-### Clone the Repository
+---
+
+##  Pour le reproduire
+
+### Cloner le répertoire
 
 ```bash
 git clone https://github.com/MasterPNJ/new-repository-game-predictor.git
