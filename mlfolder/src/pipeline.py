@@ -199,12 +199,15 @@ def main():
             }
             
             # On appelle la fonction en lui passant la config du meilleur
-            target_date, pred_value = predict_next_week(
+            prediction_result = predict_next_week(
                 ts_weekly=ts_weekly,
                 model_name=best_name,
                 model_config=model_configs_map.get(best_name),
                 max_lag=MAX_LAG
             )
+
+            target_date = pd.Timestamp(prediction_result["date"])
+            pred_value = prediction_result["prediction"]
 
             print(f"Prédiction pour la semaine du {target_date.date()} : {pred_value:.2f}")
             mlflow.log_metric("forecast_t_plus_1", pred_value)
