@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from itertools import product
 from statsmodels.tsa.statespace.sarimax import SARIMAX
+import joblib
 
 from .metrics import compute_mae_rmse
 from . import config
@@ -56,6 +57,9 @@ def evaluate_sarima_on_test(train_dev: pd.Series, test: pd.Series, order: tuple,
         enforce_stationarity=False,
         enforce_invertibility=False,
     )
+
+    joblib.save(model, "models/sarima_model.pkl")
+
     results = model.fit(disp=False)
     forecast = results.forecast(steps=len(test))
     metrics = compute_mae_rmse(test.values, forecast.values)

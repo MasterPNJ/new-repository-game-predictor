@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from prophet import Prophet
+import joblib
 
 from .metrics import compute_mae_rmse
 from . import config
@@ -26,6 +27,8 @@ def prophet_grid_search(train: pd.Series, dev: pd.Series, param_grid: list | Non
                 changepoint_prior_scale=cfg["changepoint_prior_scale"],
             )
             m.fit(train_df)
+
+            joblib.save(m, "models/prophet_model.pkl")
 
             future = m.make_future_dataframe(periods=len(dev), freq="W-MON")
             forecast = m.predict(future)
