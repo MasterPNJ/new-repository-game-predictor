@@ -15,4 +15,3 @@ matplotlib
 fastapi
 uvicorn
 joblib
-logging
