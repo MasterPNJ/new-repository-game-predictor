@@ -12,3 +12,5 @@ pandas
 numpy
 scikit-learn
 matplotlib
+fastapi
+uvicorn
