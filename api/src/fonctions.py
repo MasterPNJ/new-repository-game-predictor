@@ -1,6 +1,6 @@
 import requests
 
-TRAINER_API_URL = "http://trainer:6767"
+TRAINER_API_URL = "http://trainer:6768"
 
 def predict(model: str):
     """Appelle l'API du container trainer pour faire une prédiction"""

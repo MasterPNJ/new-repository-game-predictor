@@ -18,4 +18,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONUNBUFFERED=1
 
 # Lancer le scheduler
-CMD ["sh", "-c", "python scheduler.py & uvicorn src.api:app --host 0.0.0.0 --port 6767"]
+CMD ["sh", "-c", "python scheduler.py & uvicorn src.api:app --host 0.0.0.0 --port 6768"]
