@@ -7,6 +7,10 @@ app = FastAPI()
 
 @app.get("/predict")
 def run_function(model: str):
+
+    if model == "sarima":
+        return {"error": f"Modèle inconnu : {model}"}
+    
     prediction = predict_next_week(
         ts_weekly=load_weekly_series(
                 game_name=config.GAME_NAME,

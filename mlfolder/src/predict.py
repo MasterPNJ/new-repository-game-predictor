@@ -15,8 +15,10 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
     next_week_date = ts_weekly.index[-1] + pd.Timedelta(weeks=1)
     prediction = None
 
+    model_name = model_name.lower()
+
     # SARIMA
-    if model_name == "SARIMA":
+    if model_name == "sarima":
         if model_config is None:
             raise ValueError("model_config (order, seasonal_order) est requis pour SARIMA")
             
@@ -32,7 +34,7 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
         prediction = pred_res.predicted_mean.iloc[0]
 
     # Prophet
-    elif model_name == "Prophet":
+    elif model_name == "prophet":
         params = model_config["params"] if model_config else {}
         m = Prophet(**params)
         
@@ -46,7 +48,7 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
         prediction = forecast.iloc[-1]['yhat']
 
     # ML (LightGBM / XGBoost)
-    elif model_name in ["LightGBM", "XGBoost"]:
+    elif model_name in ["lightgbm", "xgboost"]:
         ts_extended = ts_weekly.copy()
         ts_extended.loc[next_week_date] = np.nan 
         
@@ -57,15 +59,15 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
         X_future = df_ml_extended.iloc[[-1]].drop(columns=['target'])
         df_train_full = df_ml_extended.iloc[:-1].dropna()
         
-        if model_name == "LightGBM":
+        if model_name == "lightgbm":
             model_full = train_lightgbm_model(df_train_full)
             prediction = model_full.predict(X_future)[0]
             
-        elif model_name == "XGBoost":
+        elif model_name == "xgboost":
             model_full = train_xgboost_model(df_train_full)
             prediction = model_full.predict(X_future)[0]
     
     else:
-        raise ValueError(f"Modèle inconnu : {model_name}")
+        return {"error": f"Modèle inconnu : {model_name}"}
 
     return next_week_date, prediction
