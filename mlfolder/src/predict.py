@@ -56,7 +56,9 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
         df_ml_extended = make_ml_features(ts_extended, max_lag=max_lag)
         
         # Séparation Train / Prediction
-        X_future = df_ml_extended.iloc[[-1]].drop(columns=['target'])
+        X_future = df_ml_extended.iloc[[-1]].copy()
+        if 'target' in X_future.columns:
+            X_future = X_future.drop(columns=['target'])
         df_train_full = df_ml_extended.iloc[:-1].dropna()
         
         if model_name == "lightgbm":
