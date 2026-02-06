@@ -25,6 +25,7 @@ services:
       --allowed-hosts "*"
     expose:
       - "5000"
+      - "6767"
     volumes:
       - /home/projet_bigdata/mlflow/mlruns:/mlruns
     networks:

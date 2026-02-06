@@ -5,7 +5,7 @@ app = FastAPI()
 
 @app.get("/predict")
 def run_function(model: str):
-    return predict(model)
+    return {"message": f"Tu as bien accédé au container mlflow et tu as demandé une prédiction pour le modèle: {model}"}
 
 @app.get("/models")
 def run_function():
