@@ -39,7 +39,7 @@ services:
       - /home/projet_bigdata/mlflow/state:/state
       - /home/projet_bigdata/mlflow/mlruns:/mlruns
       - /home/projet_bigdata/env:/app/env:ro 
-      - /home/projet_bigdata/models:/app/src/models:rw 
+      - /home/projet_bigdata/models:/app/models:rw 
     environment:
       - ENV_PATH=/app/env/.env 
     expose:
