@@ -76,6 +76,8 @@ def predict_next_week(ts_weekly, model_name, model_config=None, max_lag=4):
         return {"error": f"Modèle inconnu : {model_name}"}
 
     return {
+        "jeu": "Minecraft",
+        "model": model_name,
         "date": next_week_date.strftime("%Y-%m-%d"),
         "prediction": float(prediction)
     }
