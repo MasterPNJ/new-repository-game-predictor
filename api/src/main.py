@@ -61,11 +61,11 @@ def run_predict(
     summary="Lister les modèles disponibles",
     description="Récupère depuis le service **trainer** la liste des modèles actuellement disponibles.",
     response_model=Union[ModelsResponse, ErrorResponse],
-    tags=["Modèles"],
+    tags=["Modèles"]
 )
 def run_models():
-    result = get_models()
-
+    #result = get_models()
+    result = {"models": ["Prophet", "LightGBM", "XGBoost"]}
     if "error" in result:
         return result
 
@@ -77,7 +77,7 @@ def run_models():
     summary="Lancer l'entraînement des modèles",
     description="Déclenche un entraînement complet via le service **trainer** dans la pipeline MLOps.",
     response_model=Union[TrainResponse, ErrorResponse],
-    tags=["Entraînement"],
+    tags=["Entraînement"]
 )
 def run_train():
     result = train()
@@ -96,7 +96,7 @@ def run_train():
     summary="Charger les données pour l'entraînement",
     description="Appelle le service **script_chargement_donnnees** pour charger les données nécessaires à l'entraînement des modèles.",
     response_model=Union[LoadDataResponse, ErrorResponse],
-    tags=["Données"],
+    tags=["Données"]
 )
 def run_load_data():
     result = load_data()
