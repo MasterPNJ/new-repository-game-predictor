@@ -57,15 +57,7 @@ def run_predict(
 
 
 @app.get(
-    "/models",
-    summary="Lister les modèles disponibles",
-    description="Récupère depuis le service **trainer** la liste des modèles actuellement disponibles.",
-    response_model=Union[ModelsResponse, ErrorResponse],
-    tags=["Modèles"],
-    responses={
-        200: {"description": "Liste des modèles récupérée avec succès"},
-        500: {"description": "Erreur lors de l'appel au service trainer"}
-    }
+    "/models"
 )
 def run_models():
     result = get_models()
