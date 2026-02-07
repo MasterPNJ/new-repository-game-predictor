@@ -51,11 +51,15 @@ app = FastAPI(
 @app.get(
     "/predict",
     summary="Faire une prédiction avec un modèle",
-    description=f"Appelle le service **trainer** pour effectuer une prédiction à partir du modèle spécifié.\n"
-                f"### Exemple d’appel externe\n"
-                f"GET https://api.bigdata.le-luet.fr/predict?model=xgboost",
+    description=f"Appelle le service **trainer** pour effectuer une prédiction à partir du modèle spécifié.",
     response_model=Union[PredictionResponse, ErrorResponse],
-    tags=["Prédiction"]
+    tags=["Prédiction"],
+    openapi_extra={
+        "externalDocs": {
+            "description": "Exemple d'appel API avec le modèle xgboost",
+            "url": "https://api.bigdata.le-luet.fr/predict?model=xgboost"
+        }
+    }
 )
 def run_predict(
     model: str = Query(..., description="Nom du modèle à utiliser pour la prédiction")
