@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Query
 from pydantic import BaseModel
-from typing import Any, List, Dict, Union
+from typing import List, Union
 from .fonctions import predict, get_models, train, load_data
 
 app = FastAPI(
@@ -9,56 +9,58 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# =========================
-# 🔹 Modèles de réponses
-# =========================
+
 
 class ErrorResponse(BaseModel):
     error: str
 
+
+class InnerPrediction(BaseModel):
+    jeu: str
+    model: str
+    date: str
+    prediction: float
+
+
+class PredictionWrapper(BaseModel):
+    prediction: InnerPrediction
+
+
 class PredictionResponse(BaseModel):
     model: str
-    prediction: Any
+    prediction: PredictionWrapper
+
 
 class ModelsResponse(BaseModel):
     models: List[str]
 
-class TrainResponse(BaseModel):
-    status: str
-    details: Union[str, Dict[str, Any]]
 
-class LoadDataResponse(BaseModel):
-    status: str
-    details: Union[str, Dict[str, Any]]
+class MessageResponse(BaseModel):
+    message: str
 
 
-# =========================
-# 🔹 Endpoints
-# =========================
+
+
+app = FastAPI(
+    title="API MLOps Gateway",
+    description="API d'orchestration pour la pipeline MLOps : gestion des modèles, prédictions, entraînement et chargement des données.",
+    version="1.0.0"
+)
+
 
 @app.get(
     "/predict",
     summary="Faire une prédiction avec un modèle",
-    description="Appelle le service **trainer** pour effectuer une prédiction à partir du modèle spécifié.",
+    description=f"Appelle le service **trainer** pour effectuer une prédiction à partir du modèle spécifié.\n"
+                f"### Exemple d’appel externe\n"
+                f"GET https://api.bigdata.le-luet.fr/predict?model=xgboost",
     response_model=Union[PredictionResponse, ErrorResponse],
-    tags=["Prédiction"],
-    responses={
-        200: {"description": "Prédiction effectuée avec succès"},
-        500: {"description": "Erreur lors de l'appel au service trainer"}
-    }
+    tags=["Prédiction"]
 )
 def run_predict(
     model: str = Query(..., description="Nom du modèle à utiliser pour la prédiction")
 ):
-    result = predict(model)
-
-    if "error" in result:
-        return result
-
-    return {
-        "model": model,
-        "prediction": result
-    }
+    return predict(model)
 
 
 @app.get(
@@ -66,50 +68,29 @@ def run_predict(
     summary="Lister les modèles disponibles",
     description="Récupère depuis le service **trainer** la liste des modèles actuellement disponibles.",
     response_model=Union[ModelsResponse, ErrorResponse],
-    tags=["Modèles"],
+    tags=["Modèles"]
 )
 def run_models():
-    result = get_models()
-
-    if "error" in result:
-        return result
-
-    return {"models": result}
+    return get_models()
 
 
 @app.get(
     "/train",
     summary="Lancer l'entraînement des modèles",
-    description="Déclenche un entraînement complet via le service **trainer** dans la pipeline MLOps.",
-    response_model=Union[TrainResponse, ErrorResponse],
-    tags=["Entraînement"],
+    description="Déclenche un entraînement complet via le service **trainer**. La progression peut être suivie dans MLflow.",
+    response_model=Union[MessageResponse, ErrorResponse],
+    tags=["Entraînement"]
 )
 def run_train():
-    result = train()
-
-    if "error" in result:
-        return result
-
-    return {
-        "status": "training_started",
-        "details": result
-    }
+    return train()
 
 
 @app.get(
     "/load_data",
     summary="Charger les données pour l'entraînement",
     description="Appelle le service **script_chargement_donnnees** pour charger les données nécessaires à l'entraînement des modèles.",
-    response_model=Union[LoadDataResponse, ErrorResponse],
-    tags=["Données"],
+    response_model=Union[MessageResponse, ErrorResponse],
+    tags=["Données"]
 )
 def run_load_data():
-    result = load_data()
-
-    if "error" in result:
-        return result
-
-    return {
-        "status": "data_loaded",
-        "details": result
-    }
+    return load_data()
