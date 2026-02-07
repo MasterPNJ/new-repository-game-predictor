@@ -61,11 +61,14 @@ def run_predict(
     summary="Lister les modèles disponibles",
     description="Récupère depuis le service **trainer** la liste des modèles actuellement disponibles.",
     response_model=Union[ModelsResponse, ErrorResponse],
-    tags=["Modèles"]
+    tags=["Modèles"],
+    responses={
+        200: {"description": "Liste des modèles récupérée avec succès"},
+        500: {"description": "Erreur lors de l'appel au service trainer"}
+    }
 )
 def run_models():
-    #result = get_models()
-    result = {"models": ["Prophet", "LightGBM", "XGBoost"]}
+    result = get_models()
     if "error" in result:
         return result
 
