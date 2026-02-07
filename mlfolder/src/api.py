@@ -26,7 +26,7 @@ def run_function(model: str):
         model_config=None,
         max_lag=config.MAX_LAG
     )
-    return {"prediction": prediction}
+    return prediction
 
 @app.get("/models")
 def run_function():
