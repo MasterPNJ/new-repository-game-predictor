@@ -57,7 +57,10 @@ def run_predict(
 
 
 @app.get(
-    "/models"
+    "/models",
+    summary="Lister les modèles disponibles",
+    description="Récupère depuis le service **trainer** la liste des modèles actuellement disponibles.",
+    tags=["Modèles"]
 )
 def run_models():
     result = get_models()
